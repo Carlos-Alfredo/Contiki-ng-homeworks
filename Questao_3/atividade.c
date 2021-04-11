@@ -56,8 +56,6 @@ PROCESS_THREAD(main_thread, ev, data){
     b[0]=0x50;
 	event_data_ready_2 = process_alloc_event();
     event_data_ready_3 = process_alloc_event();
-    ctimer_set(&ct, CLOCK_SECOND * 5, ctimer_event_callback2, &ct);
-    ctimer_set(&ct, CLOCK_SECOND * 5, ctimer_event_callback3, &ct);
     static struct etimer timer;
     static int count_2 =0;
     etimer_set(&timer, CLOCK_SECOND * 2);
@@ -86,6 +84,7 @@ PROCESS_THREAD(main_thread, ev, data){
 PROCESS_THREAD(second_thread,ev,data){
     PROCESS_BEGIN();
     event_data_ready_4 = process_alloc_event();
+    ctimer_set(&ct, CLOCK_SECOND * 5, ctimer_event_callback2, &ct);
     while(1){
         PROCESS_WAIT_EVENT_UNTIL(ev == event_data_ready_2);
         printf("Number send by 1 to 2: %04x\n",*((int*)data));
@@ -101,6 +100,7 @@ PROCESS_THREAD(second_thread,ev,data){
 PROCESS_THREAD(third_thread,ev,data){
     PROCESS_BEGIN();
     event_data_ready_5 = process_alloc_event();
+    ctimer_set(&ct, CLOCK_SECOND * 5, ctimer_event_callback3, &ct);
     while(1){
         PROCESS_WAIT_EVENT_UNTIL(ev == event_data_ready_3);
         printf("Number send by 1 to 3: %04x\n",*((char*)data));
